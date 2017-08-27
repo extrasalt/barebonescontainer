@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
-	_ "os/exec"
+	"os/exec"
 	_ "syscall"
 
 )
@@ -13,7 +13,7 @@ func main(){
 	case "host" : 
 		host()
 	case "container":
-		// container()
+		container()
 	default:
 		fmt.Println("Usage: barebonescontainer <mode>")
 	}
@@ -22,4 +22,14 @@ func main(){
 func host(){
 	pid := os.Getpid()
 	fmt.Println("pid", pid)
+}
+
+func container(){
+	cmd := exec.Command("/proc/self/exe", "host")
+	cmd.Stdout = os.Stdout
+	err := cmd.Run()
+
+	if err != nil {
+		panic(err)
+	}
 }
