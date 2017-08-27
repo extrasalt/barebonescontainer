@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	_ "syscall"
+	"syscall"
 
 )
 
@@ -27,6 +27,9 @@ func host(){
 func container(){
 	cmd := exec.Command("/proc/self/exe", "host")
 	cmd.Stdout = os.Stdout
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Cloneflags: syscall.CLONE_NEWPID,
+	}
 	err := cmd.Run()
 
 	if err != nil {
